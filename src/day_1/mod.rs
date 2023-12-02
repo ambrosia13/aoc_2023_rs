@@ -16,7 +16,7 @@ fn sum_calibrations(input: &str) -> u32 {
     input
         .trim()
         .lines()
-        .map(|line| collect_digits_in_line(line.trim()))
+        .map(collect_digits_in_line)
         .map(|digits| digits.first().unwrap() * 10 + digits.last().unwrap())
         .sum()
 }

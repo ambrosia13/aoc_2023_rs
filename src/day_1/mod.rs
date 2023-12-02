@@ -13,16 +13,12 @@ fn collect_digits_in_line(input: &str) -> Vec<u32> {
 }
 
 fn sum_calibrations(input: &str) -> u32 {
-    let mut sum = 0;
-
-    for line in input.trim().lines() {
-        let digits = collect_digits_in_line(line.trim());
-
-        let calibration = digits.first().unwrap() * 10 + digits.last().unwrap();
-        sum += calibration;
-    }
-
-    sum
+    input
+        .trim()
+        .lines()
+        .map(|line| collect_digits_in_line(line.trim()))
+        .map(|digits| digits.first().unwrap() * 10 + digits.last().unwrap())
+        .sum()
 }
 
 fn part_one(input: &str) {

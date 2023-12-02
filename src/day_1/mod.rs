@@ -12,7 +12,7 @@ fn collect_digits_in_line(input: &str) -> Vec<u32> {
     digits
 }
 
-fn sum_first_and_last(input: &str) -> u32 {
+fn sum_calibrations(input: &str) -> u32 {
     let mut sum = 0;
 
     for line in input.trim().lines() {
@@ -26,7 +26,7 @@ fn sum_first_and_last(input: &str) -> u32 {
 }
 
 fn part_one(input: &str) {
-    println!("\tPart one: {}", sum_first_and_last(input));
+    println!("\tPart one: {}", sum_calibrations(input));
 }
 
 fn convert_words_to_digits_in_line(input: &str) -> String {
@@ -84,7 +84,7 @@ fn part_two(input: &str) {
         })
         .expect("Couldn't convert numbers from words to digits on input");
 
-    println!("\tPart two: {}", sum_first_and_last(&input));
+    println!("\tPart two: {}", sum_calibrations(&input));
 }
 
 pub fn run() {

@@ -4,7 +4,7 @@ fn collect_digits_in_line(input: &str) -> Vec<u32> {
     let mut digits = Vec::new();
 
     for ch in input.chars() {
-        if ch.is_digit(10) {
+        if ch.is_ascii_digit() {
             digits.push(ch.to_digit(10).unwrap());
         }
     }
@@ -88,6 +88,10 @@ pub fn run() {
 
     let input = include_str!("input.txt");
 
+    let instant = std::time::Instant::now();
+
     part_one(input);
     part_two(input);
+
+    println!("\tTime: {} ms", instant.elapsed().as_millis());
 }

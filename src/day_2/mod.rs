@@ -30,14 +30,8 @@ fn is_game_valid(game: &Game, cubes_available: &CubeCounts) -> bool {
         .all(|b| b)
 }
 
-fn get_game_from_line(line: &str) -> Game {
-    let game_regex = Regex::new(r"Game (?P<game_id>\d+)\: (?P<other_contents>.+)").unwrap();
-
-    let pattern = r"(?P<count>\d+)";
-
-    let red_regex = Regex::new(&format!("{pattern} red")).unwrap();
-    let green_regex = Regex::new(&format!("{pattern} green")).unwrap();
-    let blue_regex = Regex::new(&format!("{pattern} blue")).unwrap();
+fn get_game_from_line(line: &str, patterns: (&Regex, &Regex, &Regex, &Regex)) -> Game {
+    let (game_regex, red_regex, green_regex, blue_regex) = patterns;
 
     if let Some(caps) = game_regex.captures(line) {
         let rounds = caps["other_contents"]
@@ -83,10 +77,18 @@ fn part_one(input: &str) {
         blue_count: 14,
     };
 
+    let game_regex = Regex::new(r"Game (?P<game_id>\d+)\: (?P<other_contents>.+)").unwrap();
+
+    let pattern = r"(?P<count>\d+)";
+
+    let red_regex = Regex::new(&format!("{pattern} red")).unwrap();
+    let green_regex = Regex::new(&format!("{pattern} green")).unwrap();
+    let blue_regex = Regex::new(&format!("{pattern} blue")).unwrap();
+
     let sum: usize = input
         .trim()
         .lines()
-        .map(get_game_from_line)
+        .map(|line| get_game_from_line(line, (&game_regex, &red_regex, &green_regex, &blue_regex)))
         .filter(|game| is_game_valid(game, &cubes_available))
         .map(|game| game.id)
         .sum();
@@ -113,10 +115,18 @@ fn find_required_cube_counts(game: &Game) -> CubeCounts {
 }
 
 fn part_two(input: &str) {
+    let game_regex = Regex::new(r"Game (?P<game_id>\d+)\: (?P<other_contents>.+)").unwrap();
+
+    let pattern = r"(?P<count>\d+)";
+
+    let red_regex = Regex::new(&format!("{pattern} red")).unwrap();
+    let green_regex = Regex::new(&format!("{pattern} green")).unwrap();
+    let blue_regex = Regex::new(&format!("{pattern} blue")).unwrap();
+
     let sum: usize = input
         .trim()
         .lines()
-        .map(get_game_from_line)
+        .map(|line| get_game_from_line(line, (&game_regex, &red_regex, &green_regex, &blue_regex)))
         .map(|game| find_required_cube_counts(&game))
         .map(|cube_counts| cube_counts.power())
         .sum();

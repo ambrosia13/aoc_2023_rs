@@ -104,7 +104,7 @@ fn part_one(input: &str) {
 
     println!("\tPart one: {sum}");
 }
-fn part_two(input: &str) {}
+fn part_two(_input: &str) {}
 
 pub fn run() {
     println!("Day three:");

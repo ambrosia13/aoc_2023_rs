@@ -141,39 +141,6 @@ fn part_two(input: &str) {
     println!("\tPart two: {}", card_count.load(Ordering::Relaxed));
 }
 
-fn part_two_singlethreaded(input: &str) {
-    let all_cards: Vec<Card> = input.lines().map(parse_card_from_line).collect();
-
-    // create and populate queue
-    let cards_processing_queue = SegQueue::new();
-    for card in input.lines().map(parse_card_from_line) {
-        cards_processing_queue.push(card);
-    }
-
-    let mut processed_cards = Vec::new();
-
-    while let Some(card) = cards_processing_queue.pop() {
-        //dbg!(cards_processing_queue.len());
-        let winning_matches = card.winning_matches();
-
-        // Start from the index+1, and since indices are already offset, just use the card's index
-        let lower_bound = card.index as usize;
-        let upper_bound = (card.index + winning_matches) as usize;
-
-        // the cards that we will duplicate
-        for i in lower_bound..upper_bound {
-            if let Some(card) = all_cards.get(i) {
-                cards_processing_queue.push(card.clone()); // clone the card and push it to the processing queue
-            }
-        }
-
-        // now we're done with the current card from the queue, add it to processed_cards
-        processed_cards.push(card);
-    }
-
-    println!("\tPart two: {}", processed_cards.len());
-}
-
 pub fn run() {
     println!("Day four:");
 
@@ -182,20 +149,7 @@ pub fn run() {
     let instant = std::time::Instant::now();
 
     part_one(input);
-
-    let singlethreaded = std::time::Instant::now();
-    part_two_singlethreaded(input);
-    println!(
-        "\tSinglethreaded: {} ms",
-        singlethreaded.elapsed().as_millis()
-    );
-
-    let multithreaded = std::time::Instant::now();
     part_two(input);
-    println!(
-        "\tMultithreaded: {} ms",
-        multithreaded.elapsed().as_millis()
-    );
 
     println!("\tTime: {} ms", instant.elapsed().as_millis());
 }

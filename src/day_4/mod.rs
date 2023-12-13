@@ -10,6 +10,7 @@ use crossbeam_queue::SegQueue;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)] // I want to keep index as part of the card struct!
 struct Card {
     index: u32,
     winning_numbers: Vec<u32>,
@@ -86,7 +87,8 @@ fn part_one(input: &str) {
     println!("\tPart one: {sum}");
 }
 
-fn part_two(input: &str) {
+// Parallel version of the brute-force solution that I spent a loooong time on. It's useless, but I'm proud of it.
+fn _part_two(input: &str) {
     let all_cards: Vec<Card> = input.lines().map(parse_card_from_line).collect();
 
     // create and populate queue
@@ -139,6 +141,31 @@ fn part_two(input: &str) {
     }
 
     println!("\tPart two: {}", card_count.load(Ordering::Relaxed));
+}
+
+fn part_two(input: &str) {
+    let mut card_counts: Vec<(Card, usize)> = input
+        .lines()
+        .map(parse_card_from_line)
+        .zip(std::iter::repeat(1))
+        .collect();
+
+    let mut total_card_count = 0;
+
+    for i in 0..card_counts.len() {
+        let (current_card, current_count) = &card_counts[i];
+        let current_count = *current_count;
+
+        total_card_count += current_count;
+
+        let winning_matches = current_card.winning_matches() as usize;
+
+        for (_, count) in card_counts.iter_mut().skip(i + 1).take(winning_matches) {
+            *count += current_count;
+        }
+    }
+
+    println!("\tPart two: {}", total_card_count);
 }
 
 pub fn run() {

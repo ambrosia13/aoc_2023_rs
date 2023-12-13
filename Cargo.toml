@@ -8,4 +8,6 @@ edition = "2021"
 [dependencies]
 array2d = "0.3.0"
 crossbeam-queue = "0.3.8"
+num_cpus = "1.16.0"
+rayon = "1.8.0"
 regex = "1.10.2"
